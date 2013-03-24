@@ -34,6 +34,8 @@
 #include <linux/string.h>
 #endif
 
+#include <linux/ctype.h>
+
 enum soc_type {
 	TYPE_S3C6400,
 	TYPE_S3C6410,
@@ -41,44 +43,11 @@ enum soc_type {
 	TYPE_S5PC110,
 };
 
-struct mtd_partition s3c_partition_info[] = {
-	{
-		.name		= "misc",
-		.offset		= (768*SZ_1K),          /* for bootloader */
-		.size		= (256*SZ_1K),
-		.mask_flags	= MTD_CAP_NANDFLASH,
-	},
-	{
-		.name		= "recovery",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= (5*SZ_1M),
-	},
-	{
-		.name		= "kernel",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= (5*SZ_1M),
-	},
-	{
-		.name		= "ramdisk",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= (3*SZ_1M),
-	},
-	{
-		.name		= "system",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= (90*SZ_1M),
-	},
-	{
-		.name		= "cache",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= (80*SZ_1M),
-	},
-	{
-		.name		= "userdata",
-		.offset		= MTDPART_OFS_APPEND,
-		.size		= MTDPART_SIZ_FULL,
-	}
-};
+/* START OF DEVICE SPECIFIC PARTITION LAYOUT */
+
+#include "samsung_galaxyp.h"
+
+/* END OF DEVICE SPECIFIC PARTITION LAYOUT */
 
 #define ONENAND_ERASE_STATUS		0x00
 #define ONENAND_MULTI_ERASE_SET		0x01
@@ -1039,6 +1008,7 @@ static int s3c_onenand_probe(struct platform_device *pdev)
 		add_mtd_partitions(mtd, pdata->parts, pdata->nr_parts);
 	else
 #endif
+
 	if (num_partitions <= 0) {
 		/* default partition table */
 		num_partitions = ARRAY_SIZE(s3c_partition_info);	/* pdata->nr_parts */
