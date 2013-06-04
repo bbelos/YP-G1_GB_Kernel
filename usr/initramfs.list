@@ -1,0 +1,24 @@
+#####################
+# .
+# Last modified: 1303434626.6776324710
+
+dir /stage1 755 0 0
+dir /lib 755 0 0 
+dir /lib/modules 755 0 0
+file /lib/modules/fsr.ko usr/initramfs/lib/modules/fsr.ko 644 0 0
+file /lib/modules/fsr_stl.ko usr/initramfs/lib/modules/fsr_stl.ko 644 0 0
+file /lib/modules/j4fs.ko usr/initramfs/lib/modules/j4fs.ko 644 0 0
+file /lib/modules/param.ko usr/initramfs/lib/modules/param.ko 644 0 0
+file /stage1/busybox usr/initramfs/stage1/busybox 755 0 0
+file /stage1/init usr/initramfs/stage1/init 755 0 0
+file /stage1/reboot usr/initramfs/stage1/reboot 755 0 0
+slink /stage1/devmem busybox 755 0 0
+slink /stage1/echo busybox 755 0 0
+slink /stage1/insmod busybox 755 0 0
+slink /stage1/mkdir busybox 755 0 0
+slink /stage1/mknod busybox 755 0 0
+slink /stage1/mount busybox 755 0 0
+slink /stage1/rm busybox 755 0 0
+slink /stage1/sh busybox 755 0 0
+slink /stage1/umount busybox 755 0 0
+slink /init /stage1/init 755 0 0
