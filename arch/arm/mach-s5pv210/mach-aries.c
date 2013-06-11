@@ -68,9 +68,9 @@
 
 #ifdef CONFIG_ANDROID_PMEM
 #include <linux/android_pmem.h>
+#endif
 #include <plat/media.h>
 #include <mach/media.h>
-#endif
 
 #ifdef CONFIG_S5PV210_POWER_DOMAIN
 #include <mach/power-domain.h>
@@ -1486,6 +1486,7 @@ static struct gpio_event_direct_entry aries_keypad_key_map[] = {
 	}
 };
 
+#ifdef CONFIG_INPUT_GPIO
 static struct gpio_event_input_info aries_keypad_key_info = {
 	.info.func = gpio_event_input_func,
 	.info.no_suspend = true,
@@ -1516,6 +1517,7 @@ static struct platform_device aries_input_device = {
 		.platform_data = &aries_input_data,
 	},
 };
+#endif
 
 #ifdef CONFIG_S5P_ADC
 static struct s3c_adc_mach_info s3c_adc_platform __initdata = {
@@ -2080,8 +2082,12 @@ static struct s3c_platform_fimc fimc_plat_lsi = {
 	.clk_rate	= 166750000,
 	.default_cam	= CAMERA_PAR_A,
 	.camera		= {
+#ifdef CONFIG_VIDEO_ISX005
 		&isx005,
+#endif
+#ifdef CONFIG_VIDEO_S5KA3DFX
 		&s5ka3dfx,
+#endif
 	},
 	.hw_ver		= 0x43,
 };
@@ -2235,6 +2241,7 @@ static struct i2c_board_info i2c_devs8[] __initdata = {
 	},
 };
 
+#ifdef CONFIG_USB_SWITCH_FSA9480
 static int fsa9480_init_flag = 0;
 static bool mtp_off_status;
 
@@ -2329,6 +2336,7 @@ static struct i2c_board_info i2c_devs7[] __initdata = {
 		.irq = IRQ_EINT(23),
 	},
 };
+#endif
 
 static struct i2c_board_info i2c_devs6[] __initdata = {
 #ifdef CONFIG_REGULATOR_MAX8998
@@ -2501,6 +2509,7 @@ struct platform_device sec_device_battery = {
 	.id	= -1,
 };
 
+#ifdef CONFIG_USB_SWITCH_FSA9480
 static int sec_switch_get_cable_status(void)
 {
 	return mtp_off_status ? CABLE_TYPE_NONE : set_cable_status;
@@ -2546,6 +2555,7 @@ struct platform_device sec_device_switch = {
 		.platform_data	= &sec_switch_pdata,
 	}
 };
+#endif
 
 static struct platform_device sec_device_rfkill = {
 	.name	= "bt_rfkill",
@@ -2802,6 +2812,7 @@ void config_sleep_gpio(void)
 }
 EXPORT_SYMBOL(config_sleep_gpio);
 
+#ifdef CONFIG_NET
 static unsigned int wlan_sdio_on_table[][4] = {
 	{GPIO_WLAN_SDIO_CLK, GPIO_WLAN_SDIO_CLK_AF, GPIO_LEVEL_NONE,
 		S3C_GPIO_PULL_NONE},
@@ -2999,6 +3010,7 @@ static struct platform_device sec_device_wifi = {
 		.platform_data = &wifi_pdata,
 	},
 };
+#endif
 
 static struct platform_device watchdog_device = {
 	.name = "watchdog",
@@ -3014,7 +3026,9 @@ static struct platform_device *aries_devices[] __initdata = {
 #ifdef CONFIG_RTC_DRV_S3C
 	&s5p_device_rtc,
 #endif
+#ifdef CONFIG_INPUT_GPIO
 	&aries_input_device,
+#endif
 //	&s3c_device_keypad,
 
 	&s5pv210_device_iis0,
@@ -3102,7 +3116,9 @@ static struct platform_device *aries_devices[] __initdata = {
 	&sec_device_battery,
 	&s3c_device_i2c10,
 
+#ifdef CONFIG_USB_SWITCH_FSA9480
 	&sec_device_switch,  // samsung switch driver
+#endif
 
 #ifdef CONFIG_S5PV210_POWER_DOMAIN
 	&s5pv210_pd_audio,
@@ -3141,7 +3157,9 @@ static struct platform_device *aries_devices[] __initdata = {
 #ifdef CONFIG_SND_S5P_RP
 	&s5p_device_rp,
 #endif
+#ifdef CONFIG_NET
 	&sec_device_wifi,
+#endif
 };
 
 
@@ -3271,7 +3289,9 @@ static void __init onenand_init()
 static void __init aries_machine_init(void)
 {
 	setup_ram_console_mem();
+#ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	s3c_usb_set_serial();
+#endif
 	platform_add_devices(aries_devices, ARRAY_SIZE(aries_devices));
 
 	/* Find out S5PC110 chip version */
@@ -3321,7 +3341,9 @@ static void __init aries_machine_init(void)
 		/* magnetic and accel sensor */
 		i2c_register_board_info(1, i2c_devs1, ARRAY_SIZE(i2c_devs1));
 	}
+#ifdef CONFIG_TOUCHSCREEN_QT602240
 	i2c_register_board_info(2, i2c_devs2, ARRAY_SIZE(i2c_devs2));
+#endif
 
 	/* wm8994 codec */
 	sound_init();
@@ -3332,9 +3354,11 @@ static void __init aries_machine_init(void)
 	/* Touch Key */
 //	touch_keypad_gpio_init();
 //	i2c_register_board_info(10, i2c_devs10, ARRAY_SIZE(i2c_devs10));
+#ifdef CONFIG_USB_SWITCH_FSA9480
 	/* FSA9480 */
 	fsa9480_gpio_init();
 	i2c_register_board_info(7, i2c_devs7, ARRAY_SIZE(i2c_devs7));
+#endif
 
 	/* FM Radio */
 	i2c_register_board_info(8, i2c_devs8, ARRAY_SIZE(i2c_devs8));
@@ -3449,7 +3473,9 @@ static void __init aries_machine_init(void)
 #if !defined(CONFIG_ARIES_NTT)
 	gps_gpio_init();
 #endif
+#ifdef CONFIG_NET
 	aries_init_wifi_mem();
+#endif
 
 	onenand_init();
 

@@ -38,7 +38,9 @@ obj-$(CONFIG_MACH_ARIES)	+= aries-regulator-consumer.o
 #obj-$(CONFIG_MACH_ARIES)	+= aries-btlpm.o
 obj-$(CONFIG_MACH_ARIES)	+= aries-watchdog.o
 obj-$(CONFIG_MACH_ARIES)	+= aries-panel.o
-obj-$(CONFIG_MACH_ARIES)        += sec_switch.o
+ifeq ($(CONFIG_MACH_ARIES),y)
+obj-$(CONFIG_USB_SWITCH_FSA9480)        += sec_switch.o
+endif
 
 #obj-$(CONFIG_MACH_ARIES)	+= dev-s1-phone.o
 

@@ -736,7 +736,9 @@ update:
 		wake_lock_timeout(&chg->vbus_wake_lock, HZ / 5);
 
 	if (vdc_status != prev_vdc_status) {
+#ifdef CONFIG_TOUCHSCREEN_QT602240
 		set_tsp_for_ta_detect(vdc_status);
+#endif
 		prev_vdc_status = vdc_status;
 	}
 
